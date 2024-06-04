@@ -61,7 +61,7 @@ training_args = Seq2SeqTrainingArguments(
 trainer = Seq2SeqTrainer(
   model=base_model,
   args=training_args,
-  train_dataset=sinhala_dataset,
+  train_dataset=tokenized_sinhala_dataset,
   tokenizer=tokenizer,
 )
 
