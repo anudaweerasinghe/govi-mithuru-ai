@@ -29,7 +29,7 @@ def format_instructions(sample):
     
   return outputs
 
-dataset = load_dataset(dataset_name, split="train")
+dataset = load_dataset(dataset_name, split="all")
 sinhala_dataset = dataset.filter(lambda x: x['language_code'] == 'sin')
 
 base_model = AutoModelForSeq2SeqLM.from_pretrained(base_model_name, torch_dtype=torch.bfloat16)
