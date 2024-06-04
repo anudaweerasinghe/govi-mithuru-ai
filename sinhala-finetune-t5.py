@@ -18,7 +18,7 @@ wandb.login(key=os.environ['WANDB_KEY'])
 
 def preprocess_function(examples):
   model_inputs =  tokenizer(examples["inputs"], max_length=1024, truncation=True)
-  labels = tokenizer(examples["targets"])
+  labels = tokenizer(examples["targets"], max_length=512, truncation=True)
 
   model_inputs["labels"] = labels["input_ids"]
 
