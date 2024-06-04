@@ -7,3 +7,4 @@ tiktoken
 wandb
 torch
 trl
+sentencepiece
