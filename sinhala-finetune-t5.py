@@ -18,7 +18,7 @@ wandb.login(key=os.environ['WANDB_KEY'])
 
 def preprocess_function(examples):
   model_inputs =  tokenizer(examples["inputs"], max_length=1024, truncation=True)
-  labels = tokenizer(examples["targets"], max_length=1024, truncation=True)
+  labels = tokenizer(examples["targets"])
 
   model_inputs["labels"] = labels["input_ids"]
 
@@ -29,7 +29,7 @@ sinhala_dataset = dataset.filter(lambda x: x['language_code'] == 'sin')
 
 base_model = AutoModelForSeq2SeqLM.from_pretrained(base_model_name, torch_dtype=torch.bfloat16)
 tokenizer = AutoTokenizer.from_pretrained(base_model_name)
-data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=base_model)
+data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer)
 
 tokenizer.pad_token = tokenizer.eos_token
 
@@ -55,7 +55,8 @@ training_args = Seq2SeqTrainingArguments(
   lr_scheduler_type="constant",
   gradient_accumulation_steps=64,
   gradient_checkpointing=True,
-  optim="adafactor"
+  optim="adafactor",
+  data_collator=data_collator,
 )
 
 trainer = Seq2SeqTrainer(
