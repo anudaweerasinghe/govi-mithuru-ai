@@ -30,7 +30,7 @@ def format_instructions(sample):
   return outputs
 
 dataset = load_dataset(dataset_name, split="train")
-sinhala_dataset = dataset.filter(lambda x: x['language'] == 'si')
+sinhala_dataset = dataset.filter(lambda x: x['language_code'] == 'sin')
 
 base_model = AutoModelForSeq2SeqLM.from_pretrained(base_model_name, torch_dtype=torch.bfloat16)
 tokenizer = AutoTokenizer.from_pretrained(base_model_name)
@@ -40,7 +40,7 @@ tokenizer.pad_token = tokenizer.eos_token
 
 training_args = TrainingArguments(
   output_dir="model-out",
-  num_train_epochs=1,
+  num_train_epochs=3,
   learning_rate=3e-4,
   per_device_train_batch_size=1,
   per_device_eval_batch_size=1,
@@ -49,8 +49,8 @@ training_args = TrainingArguments(
   logging_dir="distilled-model/logs",
   logging_strategy="steps",
   logging_steps=100,
-  save_strategy="steps",
-  save_steps=25000,
+  save_strategy="epoch",
+  # save_steps=25000,
   push_to_hub=True,
   hub_strategy="every_save",
   hub_model_id=model_name,
