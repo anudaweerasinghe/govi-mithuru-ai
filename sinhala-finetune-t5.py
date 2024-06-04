@@ -29,7 +29,7 @@ sinhala_dataset = dataset.filter(lambda x: x['language_code'] == 'sin')
 
 base_model = AutoModelForSeq2SeqLM.from_pretrained(base_model_name, torch_dtype=torch.bfloat16)
 tokenizer = AutoTokenizer.from_pretrained(base_model_name)
-data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, mlm=False)
+data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer)
 
 tokenizer.pad_token = tokenizer.eos_token
 
