@@ -55,8 +55,7 @@ training_args = Seq2SeqTrainingArguments(
   lr_scheduler_type="constant",
   gradient_accumulation_steps=64,
   gradient_checkpointing=True,
-  optim="adafactor",
-  data_collator=data_collator,
+  optim="adafactor"
 )
 
 trainer = Seq2SeqTrainer(
@@ -64,6 +63,7 @@ trainer = Seq2SeqTrainer(
   args=training_args,
   train_dataset=tokenized_sinhala_dataset,
   tokenizer=tokenizer,
+  data_collator=data_collator,
 )
 
 trainer.train()
