@@ -17,8 +17,8 @@ login(token=os.environ['HF_TOKEN'])
 wandb.login(key=os.environ['WANDB_KEY'])
 
 def preprocess_function(examples):
-  model_inputs =  tokenizer(examples["inputs"])
-  labels = tokenizer(examples["targets"])
+  model_inputs =  tokenizer(examples["inputs"], max_length=1024, truncation=True)
+  labels = tokenizer(examples["targets"], max_length=1024, truncation=True)
 
   model_inputs["labels"] = labels["input_ids"]
 
