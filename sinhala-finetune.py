@@ -66,6 +66,7 @@ trainer = SFTTrainer(
   args=training_args,
   formatting_func=format_instructions,
   packing=False,
+  train_dataset=sinhala_dataset,
 )
 
 trainer.train()
