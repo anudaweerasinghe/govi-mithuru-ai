@@ -42,7 +42,7 @@ training_args = TrainingArguments(
   output_dir="model-out",
   num_train_epochs=3,
   learning_rate=3e-4,
-  per_device_train_batch_size=4,
+  per_device_train_batch_size=2,
   per_device_eval_batch_size=1,
   fp16=False,
   bf16=True,
@@ -56,7 +56,7 @@ training_args = TrainingArguments(
   hub_model_id=model_name,
   report_to="wandb",
   lr_scheduler_type="constant",
-  gradient_accumulation_steps=8,
+  gradient_accumulation_steps=16,
   gradient_checkpointing=True,
   optim="adafactor"
 )
