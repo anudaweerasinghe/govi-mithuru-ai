@@ -8,7 +8,7 @@ from trl import SFTTrainer
 import os
 
 model_name = "sinhala-aya-mt5"
-base_model_name = "google/mt5-xl"
+base_model_name = "google/mt5-large"
 dataset_name = "CohereForAI/aya_dataset"
 
 os.environ["WANDB_PROJECT"] = "sinhala-llm"
