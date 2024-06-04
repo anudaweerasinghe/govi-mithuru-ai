@@ -56,7 +56,7 @@ training_args = TrainingArguments(
   hub_model_id=model_name,
   report_to="wandb",
   lr_scheduler_type="constant",
-  gradient_accumulation_steps=64,
+  gradient_accumulation_steps=32,
   gradient_checkpointing=True,
   optim="adafactor"
 )
