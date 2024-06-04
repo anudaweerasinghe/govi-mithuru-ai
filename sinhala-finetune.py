@@ -58,6 +58,7 @@ training_args = TrainingArguments(
   lr_scheduler_type="constant",
   gradient_accumulation_steps=64,
   gradient_checkpointing=True,
+  optim="adafactor"
 )
 
 trainer = SFTTrainer(
