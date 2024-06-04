@@ -2,9 +2,8 @@ from datasets import load_dataset
 from huggingface_hub import login
 import wandb
 import torch
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, TrainingArguments, DataCollatorForLanguageModeling
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, Seq2SeqTrainingArguments, DataCollatorForSeq2Seq, Seq2SeqTrainer
 
-from trl import SFTTrainer
 import os
 
 model_name = "sinhala-aya-mt5"
@@ -30,14 +29,14 @@ sinhala_dataset = dataset.filter(lambda x: x['language_code'] == 'sin')
 
 base_model = AutoModelForSeq2SeqLM.from_pretrained(base_model_name, torch_dtype=torch.bfloat16)
 tokenizer = AutoTokenizer.from_pretrained(base_model_name)
-data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, mlm=False)
 
 tokenizer.pad_token = tokenizer.eos_token
 
 tokenized_sinhala_dataset = sinhala_dataset.map(preprocess_function, batched=True)
 
-training_args = TrainingArguments(
-  output_dir="model-out",
+training_args = Seq2SeqTrainingArguments(
+  output_dir="mt5-model-out",
   num_train_epochs=3,
   learning_rate=3e-4,
   per_device_train_batch_size=2,
@@ -59,10 +58,11 @@ training_args = TrainingArguments(
   optim="adafactor"
 )
 
-trainer = SFTTrainer(
+trainer = Seq2SeqTrainer(
   model=base_model,
   args=training_args,
   train_dataset=sinhala_dataset,
+  tokenizer=tokenizer,
 )
 
 trainer.train()
