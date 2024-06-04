@@ -33,7 +33,7 @@ data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer)
 
 tokenizer.pad_token = tokenizer.eos_token
 
-tokenized_sinhala_dataset = sinhala_dataset.map(preprocess_function, batched=True)
+tokenized_sinhala_dataset = sinhala_dataset.map(preprocess_function)
 
 training_args = Seq2SeqTrainingArguments(
   output_dir="mt5-model-out",
