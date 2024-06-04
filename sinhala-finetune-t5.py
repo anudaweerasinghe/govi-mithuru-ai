@@ -62,7 +62,6 @@ training_args = TrainingArguments(
 trainer = SFTTrainer(
   model=base_model,
   args=training_args,
-  packing=False,
   train_dataset=sinhala_dataset,
 )
 
