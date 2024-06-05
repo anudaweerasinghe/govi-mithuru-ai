@@ -40,9 +40,9 @@ tokenizer.pad_token = tokenizer.eos_token
 
 training_args = TrainingArguments(
   output_dir="model-out",
-  num_train_epochs=3,
+  num_train_epochs=6,
   learning_rate=3e-4,
-  per_device_train_batch_size=2,
+  per_device_train_batch_size=1,
   per_device_eval_batch_size=1,
   fp16=False,
   bf16=True,
