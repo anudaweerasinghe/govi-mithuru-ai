@@ -2,13 +2,13 @@ from datasets import load_dataset
 from huggingface_hub import login
 import wandb
 import torch
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, TrainingArguments, DataCollatorForLanguageModeling
+from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, DataCollatorForLanguageModeling
 
 from trl import SFTTrainer
 import os
 
-model_name = "sinhala-aya-mt5"
-base_model_name = "google/mt5-large"
+model_name = "sinhala-aya-gemma"
+base_model_name = "google/gemma-1.1-2b-it"
 dataset_name = "CohereForAI/aya_dataset"
 
 os.environ["WANDB_PROJECT"] = "sinhala-llm"
@@ -32,7 +32,7 @@ def format_instructions(sample):
 dataset = load_dataset(dataset_name, split="all")
 sinhala_dataset = dataset.filter(lambda x: x['language_code'] == 'sin')
 
-base_model = AutoModelForSeq2SeqLM.from_pretrained(base_model_name, torch_dtype=torch.bfloat16)
+base_model = AutoModelForCausalLM.from_pretrained(base_model_name, torch_dtype=torch.bfloat16)
 tokenizer = AutoTokenizer.from_pretrained(base_model_name)
 data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
