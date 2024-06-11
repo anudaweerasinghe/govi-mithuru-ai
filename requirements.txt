@@ -12,3 +12,5 @@ pandas
 openpyxl
 cohere
 pinecone-client
+anthropic
+streamlit
