@@ -8,3 +8,4 @@ wandb
 torch
 trl
 sentencepiece
+pandas
