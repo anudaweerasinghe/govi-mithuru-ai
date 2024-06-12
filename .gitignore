@@ -2,3 +2,4 @@
 gm-env/
 .env
 content/
+.streamlit/

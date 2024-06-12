@@ -14,3 +14,6 @@ cohere
 pinecone-client
 anthropic
 streamlit
+llama-index
+llama-index-llms-anthropic
+llama-index-vector-stores-pinecone
