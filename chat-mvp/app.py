@@ -4,7 +4,6 @@ from pinecone import Pinecone
 import cohere
 import anthropic
 
-from ai4bharat.transliteration import XlitEngine
 
 SI_SYSTEM_PROMPT = "ඔබ ශ්‍රී ලංකාවේ වී වගාව පිළිබඳ විශේෂඥයෙක්. ගොවියාගේ ප්‍රශ්නයට පිළිතුරු දීමට සපයා ඇති තොරතුරු භාවිතා කරන්න. කෙටි හා සරල පිළිතුරු දෙන්න - අවශ්‍ය නම් පාරිභෝගිකයාගෙන් තවත් ප්‍රශ්න අසන්න. සිංහලෙන් පමණක් පිළිතුරු දෙන්න."
 
@@ -28,14 +27,15 @@ def init():
 
         llm = anthropic.Anthropic(api_key=st.secrets["anthropic_key"])
 
-        transliterator = XlitEngine(lang2use=["si"], beam_width=10, rescore=False, src_script_type = "en")
-
-        return pc_index,co,llm, transliterator
+        return pc_index,co,llm
     
-pc_index, co, llm, transliterator = init()
+pc_index, co, llm = init()
 
-if user_input_en := st.chat_input("ඔබේ ප්‍රශ්නය, English අකුරු වලින්න්"):
-  user_input = transliterator.translit_sentence(user_input_en)
+def extract_from_stream(steam):
+    for event in stream:
+        yield event.delta.text
+
+if user_input := st.chat_input("ඔබේ ප්‍රශ්නය, English අකුරු වලින්න්"):
   st.session_state.messages.append({"role": "user", "content": user_input})
 
 for message in st.session_state.messages: # Display the prior chat messages
