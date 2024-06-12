@@ -4,4 +4,3 @@ cohere
 pinecone-client
 anthropic
 streamlit
-ai4bharat-transliteration
