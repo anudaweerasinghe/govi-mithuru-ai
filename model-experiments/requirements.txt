@@ -1,0 +1,10 @@
+transformers
+bitsandbytes
+accelerate
+huggingface_hub
+ipykernel
+tiktoken
+wandb
+torch
+trl
+sentencepiece
