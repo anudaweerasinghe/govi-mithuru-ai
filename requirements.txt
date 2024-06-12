@@ -4,3 +4,4 @@ cohere
 pinecone-client
 anthropic
 streamlit
+siconv
