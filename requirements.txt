@@ -5,3 +5,4 @@ pinecone-client
 anthropic
 streamlit
 siconv
+requests
