@@ -3,3 +3,4 @@ gm-env/
 .env
 content/
 .streamlit/
+__pycache__/
