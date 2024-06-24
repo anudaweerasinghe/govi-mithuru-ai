@@ -7,13 +7,32 @@ import anthropic
 from siconv import singlish_to_sinhala
 import requests
 
+from prompts_and_strings import get_system_prompt, get_title, get_info, format_message_with_context
 
-SI_SYSTEM_PROMPT = "ඔබ ශ්‍රී ලංකාවේ වී වගාව පිළිබඳ විශේෂඥයෙක්. ගොවියාගේ ප්‍රශ්නයට පිළිතුරු දීමට සපයා ඇති තොරතුරු භාවිතා කරන්න. කෙටි හා සරල පිළිතුරු දෙන්න - අවශ්‍ය නම් පාරිභෝගිකයාගෙන් තවත් ප්‍රශ්න අසන්න. සිංහලෙන් පමණක් පිළිතුරු දෙන්න."
-
+languages = {"සිංහල": "si", "தமிழ்": "ta", "English": "en"}
 st.set_page_config(page_title="ගොවි-මිතු​රු AI", page_icon="👨🏾‍🌾", layout="centered", initial_sidebar_state="auto", menu_items=None)
-st.title("ගොවි-මිතු​රු AI 👨🏾‍🌾")
 
-st.info("ශ්‍රී ලංකාවේ වී වගා කිරීම පිළිබඳව ඔබට ඇති ඕනෑම ප්‍රශ්නයක් අසන්න")
+
+if "lang" not in st.query_params:
+    st.query_params["lang"] = "si"
+
+def set_language():
+    if "selected_language" in st.session_state:
+        st.session_state.messages = []
+        st.query_params["lang"] = languages[st.session_state.selected_language]
+        
+
+sel_lang = st.radio(
+    "Language",
+    options=languages,
+    horizontal=True,
+    on_change=set_language,
+    key="selected_language",
+)
+
+st.title(get_title(st.query_params["lang"]))
+
+st.info(get_info(st.query_params["lang"]))
 
 if "messages" not in st.session_state.keys(): # Initialize the chat messages history
     st.session_state.messages = [
@@ -34,11 +53,7 @@ def init():
     
 pc_index, co, llm = init()
 
-def extract_from_stream(steam):
-    for event in stream:
-        yield event.delta.text
-
-if user_input_en := st.chat_input("ඔබේ ප්‍රශ්නය, English අකුරු වලින්න්"):
+if user_input_en := st.chat_input("ඔබේ ප්‍රශ්නය, English අකුරු වලින්"):
   translit_model_response = requests.get(f"https://sea-lion-app-8mfcr.ondigitalocean.app/si/{user_input_en}")
 
   if translit_model_response.status_code == 200:
@@ -56,20 +71,20 @@ if len(st.session_state.messages)>0 and st.session_state.messages[-1]["role"] ==
     with st.chat_message("assistant"):
             
             query_emb = co.embed(texts=[user_input], input_type="search_query", model="embed-multilingual-v3.0").embeddings 
-            pc_results = pc_index.query(vector=query_emb, top_k=1, include_metadata=True, filter={"language": {"$eq": "si"}})
+            pc_results = pc_index.query(vector=query_emb, top_k=1, include_metadata=True, filter={"language": {"$eq": st.query_params["lang"]}})
 
             context = "\n\n".join([result["metadata"]["content"] for result in pc_results["matches"]])
 
             messages_for_anthropic = st.session_state.messages[:-1]
 
 
-            message_with_context = f"ප්රශ්නය: {user_input}\n\nඅදාල තොරතුරු: '{context}'"
+            message_with_context = format_message_with_context(st.query_params["lang"], user_input, context)
             messages_for_anthropic.append({"role": "user", "content": message_with_context})
 
             with llm.messages.stream(
                 model="claude-3-opus-20240229",
                 messages=messages_for_anthropic,
-                system=SI_SYSTEM_PROMPT,
+                system=get_system_prompt(st.query_params["lang"]),
                 max_tokens=4096,
             ) as stream:
                 text_response = st.write_stream(stream.text_stream)
