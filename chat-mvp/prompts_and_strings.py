@@ -42,3 +42,15 @@ def format_message_with_context(lang, user_input, context):
     return f"கேள்வி: {user_input}\n\nதொடர்புடைய தகவல்: '{context}'"
   else:
     return f"Question: {user_input}\n\nRelevant Information: '{context}'"
+
+SI_INPUT_PLACEHOLDER = "ඔබේ ප්‍රශ්නය, English අකුරු වලින් හෝ සිංහලෙන්"
+EN_INPUT_PLACEHOLDER = "Your question"
+TA_INPUT_PLACEHOLDER = "உங்கள் கேள்வி, English எழுத்துக்களில் அல்லது தமிழில்"
+
+def get_input_placeholder(lang):
+  if lang == "en":
+    return EN_INPUT_PLACEHOLDER
+  elif lang == "ta":
+    return TA_INPUT_PLACEHOLDER
+  else:
+    return SI_INPUT_PLACEHOLDER

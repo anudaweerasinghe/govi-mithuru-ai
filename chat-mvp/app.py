@@ -4,10 +4,9 @@ from pinecone import Pinecone
 import cohere
 import anthropic
 
-from siconv import singlish_to_sinhala
-import requests
+from translit import translit
 
-from prompts_and_strings import get_system_prompt, get_title, get_info, format_message_with_context
+from prompts_and_strings import get_system_prompt, get_title, get_info, format_message_with_context, get_input_placeholder
 
 languages = {"සිංහල": "si", "தமிழ்": "ta", "English": "en"}
 st.set_page_config(page_title="ගොවි-මිතු​රු AI", page_icon="👨🏾‍🌾", layout="centered", initial_sidebar_state="auto", menu_items=None)
@@ -53,13 +52,8 @@ def init():
     
 pc_index, co, llm = init()
 
-if user_input_en := st.chat_input("ඔබේ ප්‍රශ්නය, English අකුරු වලින්"):
-  translit_model_response = requests.get(f"https://sea-lion-app-8mfcr.ondigitalocean.app/si/{user_input_en}")
-
-  if translit_model_response.status_code == 200:
-      user_input = translit_model_response.json().get('si')
-  else:
-      user_input = singlish_to_sinhala(user_input_en)
+if user_input_en := st.chat_input(get_input_placeholder(st.query_params["lang"])):
+  user_input =  translit(st.query_params["lang"], user_input_en)
   st.session_state.messages.append({"role": "user", "content": user_input})
 
 for message in st.session_state.messages: # Display the prior chat messages
