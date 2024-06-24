@@ -65,7 +65,7 @@ if len(st.session_state.messages)>0 and st.session_state.messages[-1]["role"] ==
     with st.chat_message("assistant"):
             
             query_emb = co.embed(texts=[user_input], input_type="search_query", model="embed-multilingual-v3.0").embeddings 
-            pc_results = pc_index.query(vector=query_emb, top_k=1, include_metadata=True, filter={"language": {"$eq": st.query_params["lang"]}})
+            pc_results = pc_index.query(vector=query_emb, top_k=3, include_metadata=True, filter={"language": {"$eq": st.query_params["lang"]}})
 
             context = "\n\n".join([result["metadata"]["content"] for result in pc_results["matches"]])
 
