@@ -8,6 +8,8 @@ from translit import translit
 
 from prompts_and_strings import get_system_prompt, get_title, get_info, format_message_with_context, get_input_placeholder
 
+MODEL = "claude-3-5-sonnet-20240620"
+
 languages = {"සිංහල": "si", "தமிழ்": "ta", "English": "en"}
 st.set_page_config(page_title="ගොවි-මිතු​රු AI", page_icon="👨🏾‍🌾", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
@@ -76,7 +78,7 @@ if len(st.session_state.messages)>0 and st.session_state.messages[-1]["role"] ==
             messages_for_anthropic.append({"role": "user", "content": message_with_context})
 
             with llm.messages.stream(
-                model="claude-3-opus-20240229",
+                model=MODEL,
                 messages=messages_for_anthropic,
                 system=get_system_prompt(st.query_params["lang"]),
                 max_tokens=4096,
